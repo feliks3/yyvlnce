@@ -1,0 +1,68 @@
+BASE_TASK_CONFIG_PATH: habitat_extensions/config/rxr_vlnce_english_task.yaml
+TRAINER_NAME: dagger
+SIMULATOR_GPU_IDS: [3]
+TORCH_GPU_ID: 2 
+NUM_ENVIRONMENTS: 8 
+TENSORBOARD_DIR: data/tensorboard_dirs/rxr_cma_en
+CHECKPOINT_FOLDER: data/checkpoints/rxr_cma_en
+EVAL_CKPT_PATH_DIR: snap/VLNBERT-train-Prevalent/v1/
+
+INFERENCE:
+  SPLIT: test_challenge
+  LANGUAGES: [en-IN, en-IN]
+  SAMPLE: True
+  USE_CKPT_CONFIG: False
+  CKPT_PATH: data/checkpoints/ckpt.0.pth  # REPLACE THIS
+  PREDICTIONS_FILE: rxr_cma_en_test_challenge.jsonl
+  FORMAT: r2r
+
+EVAL:
+  USE_CKPT_CONFIG: False
+  SPLIT: val_unseen
+  EPISODE_COUNT: 1
+  SAMPLE: False
+
+RL:
+  POLICY:
+    OBS_TRANSFORMS:
+      ENABLED_TRANSFORMS: [ResizeShortestEdge, CenterCropperPerSensor]
+
+#IL:
+#  batch_size: 1
+#  epochs: 15
+#  inflection_weight_coef: 1.9
+#
+# RECOLLECT_TRAINER:
+#    preload_size: 30
+#    preload_trajectories_file: False
+#    trajectories_file: data/trajectories_dirs/rxr_en_guide_trim250/trajectories.json.gz
+#    max_traj_len: 300  # 1.3% of episodes in the English training split are above 250
+#
+#MODEL:
+#  policy_name: CMAPolicy
+#  INSTRUCTION_ENCODER:
+#    bidirectional: True
+#    sensor_uuid: rxr_instruction
+#    embedding_size: 768
+
+R2R_MODEL:
+  epoch: 15
+  feature_size: 2048
+  angle_feat_size: 128
+  #batch_size: 1
+  max_instruction_length: 260 #250
+  #episode_len: 20
+  #n_iters: 19000 #5000
+  log_every: 2000 #2000
+  max_step: 250 #300
+  name : VLNBERT-train-Prevalent
+  #load: snap/VLNBERT-PREVALENT-final/state_dict/best_val_unseen
+  #load: snap/VLNBERT-train-Prevalent/state_dict/LAST_iter5
+  load: None
+  image_feature_size: 2048
+  angle_feature_size: 128
+  action_num: 4
+  ignoreid: -100
+  #feedback_method: sample  # teacher or sample
+  ml_weight: 0.2
+
